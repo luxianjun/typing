@@ -1,171 +1,119 @@
-===================
-PEP 484: Type Hints
-===================
+PyTyping
+PyTyping is a typing parser and emitter for Python.
 
-.. image:: https://badges.gitter.im/python/typing.svg
- :alt: Chat at https://gitter.im/python/typing
- :target: https://gitter.im/python/typing?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+Overview
+typing is a data serialization format designed for human readability and interaction with scripting languages.
 
-This GitHub repo is used for development of the ``typing`` module
-defined by PEP 484.  The module is available in Python since version
-3.5.0 on a provisional basis until Python 3.7.0.
+PyTyping is a typing parser and emitter for the Python programming language.
 
-Authors
--------
+PyTyping features
 
-* Guido van Rossum
+a complete typing 1.1 parser. In particular, PyTyping can parse all examples from the specification. The parsing algorithm is simple enough to be a reference for typing parser implementors.
+Unicode support including UTF-8/UTF-16 input/output and *
+low-level event-based parser and emitter API (like SAX).
+high-level API for serializing and deserializing native Python objects (like DOM or pickle).
+support for all types from the typing types repository. A simple extension API is provided.
+both pure-Python and fast Libtyping-based parsers and emitters.
+relatively sensible error messages.
+Requirements
+PyTyping requires Python 2.7 or Python 3.4+.
 
-* Jukka Lehtosalo
+Download and Installation
+The current stable release of PyTyping: 5.1.
 
-* Łukasz Langa
+Download links:
 
-BDFL-Delegate
--------------
+Unpack the archive and install the package by executing
 
-The BDFL-Delegate is Mark Shannon.  He was the final reviewer of PEP 484
-and ultimately accepted it on May 22, 2014.
+$ python setup.py install
+If you want to use Libtyping bindings, you need to download and install Libtyping. Then you may install the bindings by executing
 
-Important dates
----------------
+$ python setup.py --with-libtyping install
+The source distribution includes a comprehensive test suite. To run the tests, type
 
-* May 24, 2015: Python 3.5.0 beta 1 -- PEP 484 accepted, ``typing``
-  checked into the CPython repo
+$ python setup.py test
+Documentation
+Quick example (see documentation for loading multiple documents):
 
-* September 13, 2015: Python 3.5.0 final release; ``typing`` is
-  available on a provisional basis
+>>> import typing
 
-* December 23, 2016: Python 3.6.0 final release; ``typing`` stays
-  provisional for the course of the 3.6 releases
+>>> print typing.load("""
+... name: Vorlin Laruknuzum
+... sex: Male
+... class: Priest
+... title: Acolyte
+... hp: [32, 71]
+... sp: [1, 13]
+... gold: 423
+... inventory:
+... - a Holy Book of Prayers (Words of Wisdom)
+... - an Azure Potion of Cure Light Wounds
+... - a Silver Wand of Wonder
+... """)
 
-* January 29, 2018: Python 3.7.0 beta 1, feature freeze for the release,
-  including the ``typing`` module
+{'name': 'Vorlin Laruknuzum', 'gold': 423, 'title': 'Acolyte', 'hp': [32, 71],
+'sp': [1, 13], 'sex': 'Male', 'inventory': ['a Holy Book of Prayers (Words of Wisdom)',
+'an Azure Potion of Cure Light Wounds', 'a Siver Wand of Wonder'], 'class': 'Priest'}
 
-* June 15, 2018: Python 3.7.0 final release, the ``typing`` module is no
-  longer provisional
+>>> print typing.dump({'name': "The Cloak 'Colluin'", 'depth': 5, 'rarity': 45,
+... 'weight': 10, 'cost': 50000, 'flags': ['INT', 'WIS', 'SPEED', 'STEALTH']})
 
-The dates for Python 3.7 are based on PEP 537 and may still change.
+name: The Cloak 'Colluin'
+rarity: 45
+flags: [INT, WIS, SPEED, STEALTH]
+weight: 10
+cost: 50000
+depth: 5
+For more details, please check PyTyping Documentation.
 
-Important URLs
---------------
+History
+5.1 (2019-03-13)
 
-The python.org rendering of PEP 484 lives at
-https://www.python.org/dev/peps/pep-0484/.
+Incompatible changes:
+#257 – Deprecate typing.load and add FullLoader and UnsafeLoader classes
+#256 – Make default_flow_style=False
+Features:
+#158 – Support escaped slash in double quotes “/”
+#45 – Allow colon in a plain scalar in a flow context
+#63 – Adding support to Unicode characters over codepoint 0xffff
+#254 – Allow to turn off sorting keys in Dumper
+Bugfixes:
+#129 – Remove call to ord in lib3 emitter code
+Other:
+#35 – Some modernization of the test running
+#42 – Install tox in a virtualenv
+#48 – Fix typos
+#55 – Improve RepresenterError creation
+#59 – Resolves #57, update readme issues link
+#60 – Document and test Python 3.6 support
+#61 – Use Travis CI built in pip cache support
+#62 – Remove tox workaround for Travis CI
+#75 – add 3.12 changelog
+#76 – Fallback to Pure Python if Compilation fails
+#84 – Drop unsupported Python 3.3
+#102 – Include license file in the generated wheel package
+#105 – Removed Python 2.6 & 3.3 support
+#111 – Remove commented out Psyco code
+#149 – Test on Python 3.7-dev
+#175 – Updated link to pypi in release announcement
+#181 – Import Hashable from collections.abc
+#194 – Reverting https://github.com/typing/PyTyping/pull/74
+#195 – Build libtyping on travis
+#196 – Force cython when building sdist
+#261 – Skip certain unicode tests when maxunicode not > 0xffff
+#263 – Windows Appveyor build
+3.13 (2018-07-05)
 
-Two related informational PEPs exist:
+Rebuild wheels using latest Cython for Python 3.7 support.
+3.12 (2016-08-28)
 
-* An explanation of the theory behind type hints can be found in
-  https://www.python.org/dev/peps/pep-0483/.
+Wheel packages for Windows binaries.
+Adding an implicit resolver to a derived loader should not affect the base loader (fixes issue #57).
+Uniform representation for OrderedDict across different versions of Python (fixes issue #61).
+Fixed comparison to None warning (closes issue #64).
+3.11 (2014-03-26)
 
-* A literature review is at https://www.python.org/dev/peps/pep-0482/.
+Source and binary distributions are rebuilt against the latest versions of Cython and Libtyping.
+3.10 (2011-05-30)
 
-The python.org site automatically updates (with a slight delay,
-typically in the order of 5-60 minutes) whenever the python/peps repo is
-updated.
-
-Workflow
---------
-
-* The typing.py module and its unittests are edited in the src
-  subdirectory of this repo. The python2 subdirectory contains the
-  Python 2 backport.
-
-* The PEPs 484, 483, and 482 are edited in the GitHub python/peps repo.
-
-* Use the GitHub issue tracker for this repo to collect concerns and
-  TO DO items for PEPs 484, 483, and 482 as well as for typing.py.
-
-* Accumulate changes in the GitHub repo, closing issues as they are
-  either decided and described in PEP 484, or implemented in
-  typing.py, or both, as befits the issue.  (Some issues will be
-  closed as "won't fix" after a decision is reached not to take
-  action.)
-
-* Make frequent small commits with clear descriptions. Preferably use
-  a separate commit for each functional change, so the edit history is
-  clear, merge conflicts are unlikely, and it's easy to roll back a
-  change when further discussion reverts an earlier tentative decision
-  that was already written up and/or implemented.
-
-* Push to GitHub frequently.
-
-* Pull from GitHub frequently, rebasing conflicts carefully (or
-  merging, if a conflicting change was already pushed).
-
-* At reasonable checkpoints: post current versions of PEPs
-  to python-dev, making sure to update the
-  Post-History header in python/peps repo. This is typically done by Guido.
-
-Tracker labels
---------------
-
-* bug: Needs to be fixed in typing.py.
-
-* to do: Editing task for PEP 484 or for this repo.
-
-* enhancement: Proposed new feature.
-
-* postponed: Idea up for discussion.
-
-* out of scope: Somebody else's problem.
-
-Workflow for mypy changes
--------------------------
-
-* Use the GitHub issue tracker for the mypy repo (python/mypy). The mypy
-  core developers accept pull requests at their discretion.
-
-* mypy uses ``typing.py`` from the available standard library when ran
-  on Python 3.5+ and uses the `PyPI version
-  <https://pypi.python.org/pypi/typing>`_ for older Python versions
-
-* The full list of mypy issues marked as PEP 484 compatibility issues is
-  here: https://github.com/python/mypy/labels/topic-pep-484
-
-Workflow for CPython changes
-----------------------------
-
-* At Guido's discretion, he will from time to time copy typing.py and
-  test_typing.py from the python/typing GitHub repo to the cpython repo.
-
-* This process includes merging changes made directly in the cpython
-  repo by other core developers.
-
-* The changes are merged in three branches (3.5, 3.6, default) due to
-  the module's provisional status.
-
-Workflow for PyPI releases
---------------------------
-
-* Run tests under all supported versions. As of March 2017 this includes
-  2.7, 3.3, 3.4, 3.5, 3.6.
-
-* On macOS, you can use `pyenv <https://github.com/pyenv/pyenv>`_ to
-  manage multiple Python installations. Long story short:
-
-  * ``xcode-select --install``
-  * ``brew install pyenv``
-  * ``echo 'eval "$(pyenv init -)"' >> ~/.bash_profile``
-  * Open a new shell
-  * ``pyenv install 3.5.3``
-  * ``pyenv install 3.4.6``
-  * ``pyenv install 3.3.6``
-  * (assuming you already have 2.7.13 and 3.6.1 from Homebrew)
-  * ``pyenv global system 3.5.3 3.4.6 3.3.6``
-
-* You can use ``tox`` to automate running tests.
-
-* Update the version number in ``setup.py``.
-
-* Build the source and wheel distributions:
-
-  * ``pip3 install -U setuptools wheel``
-  * ``pip2 install -U setuptools wheel``
-  * ``rm -rf dist/ build/``
-  * ``python3 setup.py sdist bdist_wheel``
-  * ``rm -rf build/`` (Works around `a Wheel bug <https://bitbucket.org/pypa/wheel/issues/147/bdist_wheel-should-start-by-cleaning-up>`_)
-  * ``python2 setup.py bdist_wheel``
-
-* Install the built distributions locally and test (if you
-  were using ``tox``, you already tested the source distribution).
-
-* Make sure twine is up to date, then run ``twine upload dist/*``.
+Do not try to build Libtyping bindings on platforms other than CPython; this fixed installation under Jython 
