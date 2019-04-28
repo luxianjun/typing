@@ -1,7 +1,9 @@
 PyTyping
+
 PyTyping is a typing parser and emitter for Python.
 
 Overview
+
 typing is a data serialization format designed for human readability and interaction with scripting languages.
 
 PyTyping is a typing parser and emitter for the Python programming language.
@@ -18,20 +20,26 @@ relatively sensible error messages.
 Requirements
 PyTyping requires Python 2.7 or Python 3.4+.
 
+
 Download and Installation
+
 The current stable release of PyTyping: 5.1.
 
 Download links:
 
+
 Unpack the archive and install the package by executing
 
 $ python setup.py install
+
 If you want to use Libtyping bindings, you need to download and install Libtyping. Then you may install the bindings by executing
 
 $ python setup.py --with-libtyping install
+
 The source distribution includes a comprehensive test suite. To run the tests, type
 
 $ python setup.py test
+
 Documentation
 Quick example (see documentation for loading multiple documents):
 
